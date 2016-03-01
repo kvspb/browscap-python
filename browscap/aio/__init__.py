@@ -1,6 +1,6 @@
 import asyncio
 
-import browsercap.quote
+import browscap.quote
 from .. import pattern_tools, subkey_tools, Browser
 from ..browscap import BrowscapBase, SettingsHelper, GetPattern
 from ..pattern_tools import get_hash_for_pattern
@@ -34,7 +34,7 @@ class SettingsHelperAsync(SettingsHelper):
                 del settings['Parent']
 
             if parent is not None:
-                settings = yield from self.get_settings(browsercap.quote.regex_quote(parent), settings)
+                settings = yield from self.get_settings(browscap.quote.regex_quote(parent), settings)
 
         return settings
 

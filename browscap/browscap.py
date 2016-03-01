@@ -3,10 +3,10 @@ import os
 import re
 import tempfile
 
-import browsercap.quote
-from browsercap import pattern_tools, subkey_tools
-from browsercap.pattern_tools import get_hash_for_pattern
-from browsercap.quote import preg_un_quote
+import browscap.quote
+from browscap import pattern_tools, subkey_tools
+from browscap.pattern_tools import get_hash_for_pattern
+from browscap.quote import preg_un_quote
 
 from .converter import Converter
 from .loader import IniLoader
@@ -159,7 +159,7 @@ class SettingsHelper(object):
                 del settings['Parent']
 
             if parent is not None:
-                settings = self.get_settings(browsercap.quote.regex_quote(parent), settings)
+                settings = self.get_settings(browscap.quote.regex_quote(parent), settings)
 
         return settings
 

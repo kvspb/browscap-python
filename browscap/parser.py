@@ -1,9 +1,9 @@
 import re
 import itertools
 
-import browsercap.quote
-from browsercap import pattern_tools
-from browsercap.property import PropertyFormatter, PropertyHolder
+import browscap.quote
+from browscap import pattern_tools
+from browscap.property import PropertyFormatter, PropertyHolder
 
 
 def array_chunk(it, size):
@@ -46,7 +46,7 @@ class IniParser(object):
             if tmp_length not in data[patternhash]:
                 data[patternhash][tmp_length] = set()
 
-            pattern = browsercap.quote.regex_quote(pattern)
+            pattern = browscap.quote.regex_quote(pattern)
 
             if re.search('\d', pattern) is not None:
                 compressed_patern = re.sub('\d', '[\d]', pattern)

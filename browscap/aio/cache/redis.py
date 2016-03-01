@@ -2,7 +2,7 @@ import asyncio
 
 import msgpack
 from asyncio_redis.encoders import BytesEncoder
-from browsercap import Cache
+from browscap import Cache
 
 
 class RedisAioCache(Cache):
