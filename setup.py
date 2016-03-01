@@ -1,8 +1,8 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='browscap-python',
-    version='0.0.3',
+    version='0.0.4',
     description='Python browscap library.',
     url='https://github.com/kvspb/browscap-python',
 
@@ -12,7 +12,7 @@ setup(
     license="BSD License",
     platforms=['any'],
 
-    packages=['browscap'],
+    packages=find_packages(),
 
     classifiers=[
         #   3 - Alpha
