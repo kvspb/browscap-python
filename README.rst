@@ -6,6 +6,7 @@ Detect browser
 --------------
 
 .. code:: python
+
     import browscap
     from browscap.cache.redis import RedisCache
 
@@ -17,6 +18,7 @@ Detect browser with asyncio
 ---------------------------
 
 .. code:: python
+
     from pprint import pprint
     import asyncio
     from browscap.aio import BrowscapAsync
@@ -46,6 +48,7 @@ Update base
 -----------
 
 .. code:: python
+
     import browscap
     from browscap.cache.redis import RedisCache
     from browscap import IniLoader
