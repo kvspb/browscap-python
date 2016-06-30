@@ -12,14 +12,22 @@ class RedisAioCache(Cache):
 
     @asyncio.coroutine
     def set(self, key, value):
-        yield from self.connection.select(self.db)
-        result = yield from self.connection.set(key, msgpack.dumps(value))
-        return result
+        transaction = yield from self.connection.multi()
+        yield from transaction.select(self.db)
+        f = yield from transaction.set(key, msgpack.dumps(value))
+        yield from transaction.exec()
+        data = yield from f
+
+        return data
 
     @asyncio.coroutine
     def get(self, key):
-        yield from self.connection.select(self.db)
-        data = yield from self.connection.get(key.encode())
+        transaction = yield from self.connection.multi()
+        yield from transaction.select(self.db)
+        f = yield from transaction.get(key.encode())
+        yield from transaction.exec()
+        data = yield from f
+
         if data is not None:
             return msgpack.loads(data, encoding='utf-8')
         return None
