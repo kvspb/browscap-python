@@ -95,12 +95,13 @@ class BrowscapBase(object):
     def find_settings(self, patterns_block, ua_lower):
         for patterns in patterns_block:
 
-            if re.match('^(?:%s)$' % ')|(?:'.join(patterns), ua_lower) is None:
+            pattern = re.compile('^(?:%s)$' % ')|(?:'.join(patterns), flags=re.IGNORECASE)
+            if pattern.match(ua_lower) is None:
                 continue
 
             for pattern in patterns:
                 pattern = pattern.replace('[\d]', '(\d)')
-                match_result = re.match("^%s$" % pattern, ua_lower)
+                match_result = re.match("^%s$" % pattern, ua_lower, flags=re.IGNORECASE)
 
                 if match_result is not None:
                     matches = match_result.groups()

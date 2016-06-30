@@ -7,11 +7,13 @@ Detect browser
 
 .. code:: python
 
+    import redis
     import browscap
     from browscap.cache.redis import RedisCache
 
     ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"
-    bc = browscap.Browscap(cache=RedisCache(db=5))
+    redis_cache = redis.Redis(db=5)
+    bc = browscap.Browscap(cache=RedisCache(redis_cache))
     browser=bc.get_browser(ua)
 
 Detect browser with asyncio
@@ -21,6 +23,7 @@ Detect browser with asyncio
 
     from pprint import pprint
     import asyncio
+    import asyncio_redis
     from browscap.aio import BrowscapAsync
     from browscap.aio.cache.redis import RedisAioCache
 
@@ -29,9 +32,9 @@ Detect browser with asyncio
     @asyncio.coroutine
     def get_browser():
         ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"
-        cache = RedisAioCache(db=5)
 
-        bc = BrowscapAsync(cache=cache)
+        redis_cache = yield from asyncio_redis.Pool.create(encoder=BytesEncoder(), poolsize=1)
+        bc = BrowscapAsync(cache=RedisAioCache(redis_cache,db=5))
         browser = yield from bc.get_browser(ua)
 
         cache.close_connection()
@@ -49,9 +52,11 @@ Update base
 
 .. code:: python
 
+    import redis
     import browscap
     from browscap.cache.redis import RedisCache
     from browscap import IniLoader
 
-    bc = browscap.Browscap(cache=RedisCache(db=5))
+    redis_cache = redis.Redis(db=5)
+    bc = browscap.Browscap(cache=RedisCache(redis_cache))
     bc.update(type=IniLoader.PHP_INI_FULL)
