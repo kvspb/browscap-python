@@ -5,18 +5,20 @@ from browscap import Cache
 
 
 class RedisAioCache(Cache):
-    def __init__(self, connection):
+    def __init__(self, pool):
         super().__init__()
-        self.connection = connection
+        self.pool = pool
 
     @asyncio.coroutine
     def set(self, key, value):
-        result = yield from self.connection.set(key, msgpack.dumps(value))
+        with (yield from self.pool) as redis:
+            result = yield from redis.set(key, msgpack.dumps(value))
         return result
 
     @asyncio.coroutine
     def get(self, key):
-        data = yield from self.connection.get(key.encode())
+        with (yield from self.pool) as redis:
+            data = yield from redis.get(key.encode())
         if data is not None:
             return msgpack.loads(data, encoding='utf-8')
         return None
