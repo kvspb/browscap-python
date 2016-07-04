@@ -2,8 +2,9 @@ import re
 import itertools
 
 import browscap.quote
-from browscap import pattern_tools
-from browscap.property import PropertyFormatter, PropertyHolder
+from . import pattern_tools
+from .property import PropertyFormatter, PropertyHolder
+from .subkey_tools import INI_PART_CACHE_KEY_LEN, PATTERN_CACHE_KEY_LEN
 
 
 def array_chunk(it, size):
@@ -63,7 +64,7 @@ class IniParser(object):
             if len(tmp_entries) == 0:
                 continue
 
-            subkey = patternhash[:2]
+            subkey = patternhash[:PATTERN_CACHE_KEY_LEN]
             if subkey not in contents:
                 contents[subkey] = []
 
@@ -86,7 +87,7 @@ class IniParser(object):
         for section in config:
             pattern = section.lower()
             patternhash = pattern_tools.get_hash_for_prats(pattern)
-            subkey = patternhash[:3]
+            subkey = patternhash[:INI_PART_CACHE_KEY_LEN]
 
             if subkey not in contents:
                 contents[subkey] = []

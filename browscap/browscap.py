@@ -4,9 +4,10 @@ import re
 import tempfile
 
 import browscap.quote
-from browscap import pattern_tools, subkey_tools
-from browscap.pattern_tools import get_hash_for_pattern
-from browscap.quote import preg_un_quote
+from . import pattern_tools
+from .pattern_tools import get_hash_for_pattern
+from .quote import preg_un_quote
+from .subkey_tools import INI_PART_CACHE_KEY_LEN, PATTERN_CACHE_KEY_LEN
 
 from .converter import Converter
 from .loader import IniLoader
@@ -95,13 +96,14 @@ class BrowscapBase(object):
     def find_settings(self, patterns_block, ua_lower):
         for patterns in patterns_block:
 
-            pattern = re.compile('^(?:%s)$' % ')|(?:'.join(patterns), flags=re.IGNORECASE)
-            if pattern.match(ua_lower) is None:
+            # pattern = re.compile('^(?:%s)$' % ')|(?:'.join(patterns), flags=re.IGNORECASE)
+            pattern = re.compile('|'.join(patterns), flags=re.IGNORECASE)
+            if pattern.search(ua_lower) is None:
                 continue
 
             for pattern in patterns:
                 pattern = pattern.replace('[\d]', '(\d)')
-                match_result = re.match("^%s$" % pattern, ua_lower, flags=re.IGNORECASE)
+                match_result = re.search("^%s$" % pattern, ua_lower, flags=re.IGNORECASE)
 
                 if match_result is not None:
                     matches = match_result.groups()
@@ -140,35 +142,48 @@ class SettingsHelper(object):
         unquoted_pattern = preg_un_quote(quoted_pattern)
         pattern = unquoted_pattern.lower()
         patternhash = pattern_tools.get_hash_for_prats(pattern)
-        subkey = subkey_tools.getIniPartCacheSubKey(patternhash)
+        subkey = patternhash[:INI_PART_CACHE_KEY_LEN]
 
         buffer = self.cache.get('browscap.iniparts.%s' % subkey)
-        if patternhash in buffer:
-            added_settings = buffer[patternhash]
 
-            if settings is None:
-                settings = added_settings
-                settings['browser_name_regex'] = '^%s$' % pattern
-                settings['browser_name_pattern'] = unquoted_pattern
-            else:
-                for (key, value) in added_settings.items():
-                    if key not in settings:
-                        settings[key] = value
+        if buffer is not None:
+            if patternhash in buffer:
+                added_settings = buffer[patternhash]
 
-            if 'Parent' in settings:
-                parent = settings['Parent']
-                del settings['Parent']
+                if settings is None:
+                    settings = added_settings
+                    settings['browser_name_regex'] = '^%s$' % pattern
+                    settings['browser_name_pattern'] = unquoted_pattern
+                else:
+                    for (key, value) in added_settings.items():
+                        if key not in settings:
+                            settings[key] = value
 
-            if parent is not None:
-                settings = self.get_settings(browscap.quote.regex_quote(parent), settings)
+                if 'Parent' in settings:
+                    parent = settings['Parent']
+                    del settings['Parent']
+
+                if parent is not None:
+                    settings = self.get_settings(browscap.quote.regex_quote(parent), settings)
 
         return settings
 
 
 class GetPattern(object):
+    local_cache = {}
+
+    @classmethod
+    def purge_cache(cls):
+        cls.local_cache.clear()
+
     def __init__(self, cache=None):
         super().__init__()
         self.cache = cache
+
+    def get_cache_patterns(self, subkey):
+        if subkey not in self.local_cache:
+            self.local_cache[subkey] = self.cache.get('browscap.patterns.%s' % subkey)
+        return self.local_cache[subkey]
 
     def get_patterns(self, ua):
         starts = get_hash_for_pattern(ua, True)
@@ -177,8 +192,7 @@ class GetPattern(object):
 
         contents = []
         for tmp_start in starts:
-            tmp_subkey = tmp_start[:2]
-            patterns = self.cache.get('browscap.patterns.%s' % tmp_subkey)
+            patterns = self.get_cache_patterns(tmp_start[:PATTERN_CACHE_KEY_LEN])
 
             if patterns is None or len(patterns) == 0:
                 continue

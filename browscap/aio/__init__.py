@@ -1,7 +1,8 @@
 import asyncio
 
 import browscap.quote
-from .. import pattern_tools, subkey_tools, Browser
+from ..subkey_tools import INI_PART_CACHE_KEY_LEN, PATTERN_CACHE_KEY_LEN
+from .. import pattern_tools, Browser
 from ..browscap import BrowscapBase, SettingsHelper, GetPattern
 from ..pattern_tools import get_hash_for_pattern
 from ..quote import preg_un_quote
@@ -14,7 +15,7 @@ class SettingsHelperAsync(SettingsHelper):
         unquoted_pattern = preg_un_quote(quoted_pattern)
         pattern = unquoted_pattern.lower()
         patternhash = pattern_tools.get_hash_for_prats(pattern)
-        subkey = subkey_tools.getIniPartCacheSubKey(patternhash)
+        subkey = patternhash[:INI_PART_CACHE_KEY_LEN]
 
         buffer = yield from self.cache.get('browscap.iniparts.%s' % subkey)
         if patternhash in buffer:
@@ -41,6 +42,12 @@ class SettingsHelperAsync(SettingsHelper):
 
 class GetPatternAsync(GetPattern):
     @asyncio.coroutine
+    def get_cache_patterns(self, subkey):
+        if subkey not in self.local_cache:
+            self.local_cache[subkey] = yield from self.cache.get('browscap.patterns.%s' % subkey)
+        return self.local_cache[subkey]
+
+    @asyncio.coroutine
     def get_patterns(self, ua):
         starts = get_hash_for_pattern(ua, True)
         length = len(ua)
@@ -48,8 +55,7 @@ class GetPatternAsync(GetPattern):
 
         contents = []
         for tmp_start in starts:
-            tmp_subkey = tmp_start[:2]
-            patterns = yield from self.cache.get('browscap.patterns.%s' % tmp_subkey)
+            patterns = yield from self.get_cache_patterns(tmp_start[:PATTERN_CACHE_KEY_LEN])
 
             if patterns is None:
                 continue

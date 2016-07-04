@@ -1,6 +1,2 @@
-def getPatternCacheSubkey(string):
-    return string[:2]
-
-
-def getIniPartCacheSubKey(string):
-    return string[:3]
+PATTERN_CACHE_KEY_LEN = 2
+INI_PART_CACHE_KEY_LEN = 3
