@@ -4,7 +4,7 @@ from .browscap import Browser, Browscap
 from .loader import IniLoader
 
 __title__ = 'browscap'
-__version__ = '0.0.12'
+__version__ = '0.0.13'
 __author__ = "Valery Komarov"
 
 VERSION = tuple(map(int, __version__.split('.')))

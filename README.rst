@@ -25,7 +25,7 @@ Detect browser with asyncio
     import asyncio
     import asyncio_redis
     from browscap.aio import BrowscapAsync
-    from browscap.aio.cache.redis import RedisAioCache
+    from browscap.aio.cache.redis import RedisPoolAioCache
 
     loop = asyncio.get_event_loop()
 
@@ -34,7 +34,7 @@ Detect browser with asyncio
         ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"
 
         redis_cache = await aioredis.create_pool(('localhost', 6379), minsize=5, maxsize=100)
-        bc = BrowscapAsync(cache=RedisAioCache(redis_cache))
+        bc = BrowscapAsync(cache=RedisPoolAioCache(redis_cache))
         browser = yield from bc.get_browser(ua)
 
         cache.close_connection()
