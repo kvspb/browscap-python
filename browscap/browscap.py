@@ -77,6 +77,9 @@ class BrowscapBase(object):
         super().__init__()
         self.cache = cache
 
+    def get_version(self):
+        return self.cache.get('browscap.version')
+
     def update(self, type=IniLoader.PHP_INI_FULL, file_name=None):
 
         if file_name is None:
