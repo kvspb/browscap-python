@@ -1,4 +1,4 @@
-Python Borwscap Library
+Python Browscap Library
 =======================
 
 
