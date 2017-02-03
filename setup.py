@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='browscap-python',
     version='0.0.13',
-    description='Python Borwscap Library.',
+    description='Python Browscap Library.',
     url='https://github.com/kvspb/browscap-python',
 
     author='Valery Komarov',
