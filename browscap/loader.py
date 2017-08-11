@@ -1,5 +1,7 @@
 import logging
 
+import requests
+
 try:
     from urllib.request import urlopen
 except ImportError:
@@ -18,21 +20,16 @@ class IniLoader(object):
     remote_version_url = 'http://browscap.org/version-number'
 
     def get_remote_version(self):
-        with urlopen(self.remote_version_url) as response:
-            return int(response.read())
+        return int(requests.get(self.remote_version_url).content)
 
     def get_version_time(self):
-        with urlopen(self.remote_time_url) as response:
-            return response.read()
+        return requests.get(self.remote_time_url).content
 
     def get_ini(self, file_name=None, type=PHP_INI):
         url = self.remote_ini_url + type
         logger.info("Fetching %s." % url)
-        with urlopen(url) as response:
-            contents = response.read()
-
+        contents = requests.get(url).content
         logger.info("Fetched")
-
         if file_name is not None:
             with open(file_name, 'wb') as file:
                 file.write(contents)
