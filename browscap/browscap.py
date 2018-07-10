@@ -1,6 +1,6 @@
 import logging
 import os
-import re
+import re2
 import tempfile
 
 import browscap.quote
@@ -99,14 +99,13 @@ class BrowscapBase(object):
     def find_settings(self, patterns_block, ua_lower):
         for patterns in patterns_block:
 
-            # pattern = re.compile('^(?:%s)$' % ')|(?:'.join(patterns), flags=re.IGNORECASE)
-            pattern = re.compile('|'.join(patterns), flags=re.IGNORECASE)
+            pattern = re2.compile('^(?:%s)$' % ')|(?:'.join(patterns))
             if pattern.search(ua_lower) is None:
                 continue
 
             for pattern in patterns:
                 pattern = pattern.replace('[\d]', '(\d)')
-                match_result = re.search("^%s$" % pattern, ua_lower, flags=re.IGNORECASE)
+                match_result = re2.search("^%s$" % pattern, ua_lower)
 
                 if match_result is not None:
                     matches = match_result.groups()
