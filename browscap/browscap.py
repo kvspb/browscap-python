@@ -192,7 +192,6 @@ class GetPattern(object):
         length = len(ua)
         starts.append('z' * 32)
 
-        contents = []
         for tmp_start in starts:
             patterns = self.get_cache_patterns(tmp_start[:PATTERN_CACHE_KEY_LEN])
 
@@ -203,9 +202,7 @@ class GetPattern(object):
             for buffer in patterns:
                 if buffer[0] == tmp_start:
                     if buffer[1] <= length:
-                        contents.append(buffer[2])
+                        yield buffer[2]
                     found = True
                 elif found is True:
                     break
-
-        return contents
