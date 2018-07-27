@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='browscap-python',
-    version='0.0.15',
+    version='0.0.16',
     description='Python Browscap Library.',
     url='https://github.com/kvspb/browscap-python',
 
@@ -20,7 +20,7 @@ setup(
         'redis',
     ],
     dependency_links=[
-        'git+https://github.com/facebook/pyre2.git#egg=fb-re2',
+        'git+https://github.com/facebook/pyre2.git@master#egg=fb-re2',
     ],
 
     classifiers=[
