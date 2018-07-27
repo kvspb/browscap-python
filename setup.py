@@ -13,6 +13,15 @@ setup(
     platforms=['any'],
 
     packages=find_packages(),
+    install_requires=[
+        'aioredis',
+        'fb-re2',
+        'msgpack-python',
+        'redis',
+    ],
+    dependency_links=[
+        'git+https://github.com/facebook/pyre2.git#egg=fb-re2',
+    ],
 
     classifiers=[
         #   3 - Alpha

@@ -1,4 +1,0 @@
-redis
-aioredis
-msgpack-python
-git+https://github.com/facebook/pyre2.git
