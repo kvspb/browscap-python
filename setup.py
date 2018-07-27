@@ -19,10 +19,6 @@ setup(
         'msgpack-python',
         'redis',
     ],
-    dependency_links=[
-        'git+https://github.com/facebook/pyre2.git@master#egg=fb-re2',
-    ],
-
     classifiers=[
         #   3 - Alpha
         #   4 - Beta
