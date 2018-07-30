@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='browscap-python',
-    version='0.0.14',
+    version='0.0.16',
     description='Python Browscap Library.',
     url='https://github.com/kvspb/browscap-python',
 
@@ -13,7 +13,12 @@ setup(
     platforms=['any'],
 
     packages=find_packages(),
-
+    install_requires=[
+        'aioredis',
+        'fb-re2',
+        'msgpack-python',
+        'redis',
+    ],
     classifiers=[
         #   3 - Alpha
         #   4 - Beta
