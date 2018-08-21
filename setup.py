@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
 
+with open("README.rst", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='browscap-python',
     version='0.0.16',
     description='Python Browscap Library.',
+    long_description=long_description,
+
     url='https://github.com/kvspb/browscap-python',
 
     author='Valery Komarov',
@@ -13,12 +18,14 @@ setup(
     platforms=['any'],
 
     packages=find_packages(),
+
     install_requires=[
         'aioredis',
         'fb-re2',
         'msgpack-python',
         'redis',
     ],
+
     classifiers=[
         #   3 - Alpha
         #   4 - Beta

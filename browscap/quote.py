@@ -14,9 +14,9 @@ def preg_un_quote(pattern):
     unquoted = pattern
 
     if re.search('[^a-z\s]', pattern, flags=re.IGNORECASE) is not None:
-        unquoted = re.sub('(?<!\\\\)\\.\\*', '\\*', unquoted)
-        unquoted = re.sub('(?<!\\\\)\\.', '\\?', unquoted)
-        unquoted = re.sub('(?<!\\\\)\\\\x', '\\x', unquoted)
+        unquoted = re.sub('(?<!\\\\)\\.\\*', '\\\\*', unquoted)
+        unquoted = re.sub('(?<!\\\\)\\.', '\\\\?', unquoted)
+        unquoted = re.sub('(?<!\\\\)\\\\x', '\\\\x', unquoted)
 
         for i in range(0, len(unquote_replace_from)):
             unquoted = unquoted.replace(unquote_replace_from[i], unquote_replace_to[i])
